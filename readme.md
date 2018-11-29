@@ -1,6 +1,10 @@
 # Indented.SecurityPolicy
 
+This module provides commands and DSC resources for manipulating and maintaining User Rights Assignment, Security Options, and Group Managed Service Account installation.
+
 ## Commands
+
+The commands below are exported by this module.
 
 ### User rights
 
@@ -28,10 +32,21 @@
 
 ## DSC resources
 
+The following DSC resources are made available.
+
 ### GroupManagedServiceAccount
 
  - **Ensure** - _Optional_. Present by default.
  - **Name** - _Mandatory_. The SamAccountName of the account to install.
+
+Example usage:
+
+```powershell
+GroupManagedServiceAccount AccountName {
+    Ensure = 'Present'
+    Name   = 'Username$'
+}
+```
 
 ### RegistryPolicy
 
@@ -41,11 +56,41 @@
  - **Data** - _Optional_. Should be defined if Ensure is present.
  - **ValueType** - _Optional_. String by default. Permissible values: String, DWord, QWord, MultiString, and Binary.
 
+A helper resource used to configure arbitrary policies.
+
+```powershell
+RegistryPolicy LocalAccountTokenFilterPolicy {
+    Ensure    = 'Present'
+    Name      = 'LocalAccountTokenFilterPolicy'
+    Path      = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
+    Data      = 0
+    ValueType = 'DWord'
+}
+```
+
 ### SecurityOption
 
  - **Ensure** - _Optional_. Present by default.
  - **Name** - _Key_. The name or descriptive name of the policy. See Resolve-SecurityOption.
  - **Value** - _Optional_. Should be defined if Ensure is present. A value consistent with the value type for the option.
+
+Policies may be referenced either using the short name, see Resolve-SecurityOption, or the long policy name.
+
+Example usage:
+
+```powershell
+SecurityOption EnableLUA {
+    Ensure = 'Present'
+    Name   = 'EnableLUA'
+    Value  = 'Enabled'
+}
+
+SecurityOption ShutdownWithoutLogon {
+    Ensure = 'Present'
+    Name   = 'Shutdown: Allow system to be shut down without having to log on'
+    Value  = 'Enabled'
+}
+```
 
 ### UserRightAssignment
 
@@ -54,3 +99,15 @@
  - **AccountName** - An array of accounts to add or remove. To clear the right, set Ensure to absent, and leave this list empty.
  - **Replace** - By default principals are added to, or removed from, the list. Setting replace to true rewrites the list.
  - **Description** - _NotConfigurable_ Set by the resource to the descriptive name of the policy.
+
+Rights may be referenced either using the short name, see Resolve-UserRight, or the long right name.
+
+Example usage:
+
+```powershell
+UserRightAssignment SeMachineAccountPrivilege {
+    Ensure      = 'Present'
+    Name        = 'Add workstations to domain'
+    AccountName = 'Account1', 'Account2'
+}
+```
