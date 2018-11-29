@@ -30,27 +30,27 @@
 
 ### GroupManagedServiceAccount
 
-    - **Ensure** - _Optional_. Present by default.
-    - **Name** - _Mandatory_. The SamAccountName of the account to install.
+ - **Ensure** - _Optional_. Present by default.
+ - **Name** - _Mandatory_. The SamAccountName of the account to install.
 
 ### RegistryPolicy
 
-    - **Ensure** - _Optional_. Present by default.
-    - **Name** - _Key_. The name of the policy, a registry value.
-    - **Path** - _Key_. The path to the registry key.
-    - **Data** - _Optional_. Should be defined if Ensure is present.
-    - **ValueType** - _Optional_. String by default. Permissible values: String, DWord, QWord, MultiString, and Binary.
+ - **Ensure** - _Optional_. Present by default.
+ - **Name** - _Key_. The name of the policy, a registry value.
+ - **Path** - _Key_. The path to the registry key.
+ - **Data** - _Optional_. Should be defined if Ensure is present.
+ - **ValueType** - _Optional_. String by default. Permissible values: String, DWord, QWord, MultiString, and Binary.
 
 ### SecurityOption
 
-    - **Ensure** - _Optional_. Present by default.
-    - **Name** - _Key_. The name or descriptive name of the policy. See Resolve-SecurityOption.
-    - **Value** - _Optional_. Should be defined if Ensure is present. A value consistent with the value type for the option.
+ - **Ensure** - _Optional_. Present by default.
+ - **Name** - _Key_. The name or descriptive name of the policy. See Resolve-SecurityOption.
+ - **Value** - _Optional_. Should be defined if Ensure is present. A value consistent with the value type for the option.
 
 ### UserRightAssignment
 
-    - **Ensure** - _Optional_. Present by default.
-    - **Name** - _Mandatory_. The name or descriptive name of a policy.
-    - **AccountName** - An array of accounts to add or remove. To clear the right, set Ensure to absent, and leave this list empty.
-    - **Replace** - By default principals are added to, or removed from, the list. Setting replace to true rewrites the list.
-    - **Description** - _NotConfigurable_ Set by the resource to the descriptive name of the policy.
+ - **Ensure** - _Optional_. Present by default.
+ - **Name** - _Mandatory_. The name or descriptive name of a policy.
+ - **AccountName** - An array of accounts to add or remove. To clear the right, set Ensure to absent, and leave this list empty.
+ - **Replace** - By default principals are added to, or removed from, the list. Setting replace to true rewrites the list.
+ - **Description** - _NotConfigurable_ Set by the resource to the descriptive name of the policy.
