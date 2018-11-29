@@ -1,0 +1,4 @@
+enum ForceGuest {
+    Classic
+    GuestOnly
+}

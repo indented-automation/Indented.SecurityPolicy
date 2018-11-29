@@ -1,0 +1,4 @@
+enum LdapServerIntegrity {
+    None
+    RequireSigning
+}
