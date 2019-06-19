@@ -1,4 +1,4 @@
-filter Reset-SecurityOption {
+function Reset-SecurityOption {
     <#
     .SYNOPSIS
         Reset the value of a security option to its default.
@@ -25,18 +25,20 @@ filter Reset-SecurityOption {
         [String[]]$Name
     )
 
-    foreach ($securityOptionInfo in $Name | Resolve-SecurityOption | Sort-Object Category, ShortDescription) {
-        $value = $securityOptionInfo.Default
+    process {
+        foreach ($securityOptionInfo in $Name | Resolve-SecurityOption | Sort-Object Category, ShortDescription) {
+            $value = $securityOptionInfo.Default
 
-        if ($value -eq 'Not Defined' -and $securityOptionInfo.Key) {
-            if (Test-Path $securityOptionInfo.Key) {
-                $key = Get-Item -Path $securityOptionInfo.Key
-                if ($key.GetValueNames() -contains $securityOptionInfo.Name) {
-                    Remove-ItemProperty -Path $key.PSPath -Name $securityOptionInfo.Name
+            if ($value -eq 'Not Defined' -and $securityOptionInfo.Key) {
+                if (Test-Path $securityOptionInfo.Key) {
+                    $key = Get-Item -Path $securityOptionInfo.Key
+                    if ($key.GetValueNames() -contains $securityOptionInfo.Name) {
+                        Remove-ItemProperty -Path $key.PSPath -Name $securityOptionInfo.Name
+                    }
                 }
+            } else {
+                Set-SecurityOption -Name $securityOptionInfo.Name -Value $value
             }
-        } else {
-            Set-SecurityOption -Name $securityOptionInfo.Name -Value $value
         }
     }
 }

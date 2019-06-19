@@ -1,3 +1,19 @@
+#region:TestFileHeader
+param (
+   [Boolean]$UseExisting
+)
+
+if (-not $UseExisting) {
+   $moduleBase = $psscriptroot.Substring(0, $psscriptroot.IndexOf('\test'))
+   $stubBase = Resolve-Path (Join-Path $moduleBase 'test*\stub\*')
+   if ($null -ne $stubBase) {
+       $stubBase | Import-Module -Force
+   }
+
+   Import-Module $moduleBase -Force
+}
+#endregion
+
 InModuleScope Indented.SecurityPolicy {
     Describe ImportSecurityOptionData {
         AfterAll {
@@ -7,7 +23,7 @@ InModuleScope Indented.SecurityPolicy {
         Context 'Import' {
             BeforeAll {
                 Mock Import-LocalizedData {
-                    @{
+                    Set-Variable $BindingVariable -Scope Script -Value @{
                         EnableLUA             = 'User Account Control: Run all administrators in Admin Approval Mode'
                         PromptOnSecureDesktop = 'User Account Control: Switch to the secure desktop when prompting for elevation'
                     }

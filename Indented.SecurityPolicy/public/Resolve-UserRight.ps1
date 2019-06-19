@@ -1,7 +1,7 @@
 using namespace System.Management.Automation
 using namespace Indented.SecurityPolicy
 
-filter Resolve-UserRight {
+function Resolve-UserRight {
     <#
     .SYNOPSIS
         Resolves the name of a user right as shown in the local security policy editor to its constant name.
@@ -29,28 +29,30 @@ filter Resolve-UserRight {
         [String]$Name
     )
 
-    if ($Name) {
-        if ($Script:userRightData.Contains($Name)) {
-            $Script:userRightData[$Name]
-        } elseif ($Script:userRightLookupHelper.Contains($Name)) {
-            $Script:userRightData[$Script:userRightLookupHelper[$Name]]
+    process {
+        if ($Name) {
+            if ($Script:userRightData.Contains($Name)) {
+                $Script:userRightData[$Name]
+            } elseif ($Script:userRightLookupHelper.Contains($Name)) {
+                $Script:userRightData[$Script:userRightLookupHelper[$Name]]
+            } else {
+                $isLikeDescription = $false
+                foreach ($value in $Script:userRightLookupHelper.Keys -like $Name) {
+                    $isLikeDescription = $true
+                    $Script:userRightData[$Script:userRightLookupHelper[$value]]
+                }
+                if (-not $isLikeDescription) {
+                    $errorRecord = [ErrorRecord]::new(
+                        [ArgumentException]::new('"{0}" does not resolve to a user right' -f $Name),
+                        'UserRightCannotResolve',
+                        'InvalidArgument',
+                        $Name
+                    )
+                    $pscmdlet.ThrowTerminatingError($errorRecord)
+                }
+            }
         } else {
-            $isLikeDescription = $false
-            foreach ($value in $Script:userRightLookupHelper.Keys -like $Name) {
-                $isLikeDescription = $true
-                $Script:userRightData[$Script:userRightLookupHelper[$value]]
-            }
-            if (-not $isLikeDescription) {
-                $errorRecord = [ErrorRecord]::new(
-                    [ArgumentException]::new('"{0}" does not resolve to a user right' -f $Name),
-                    'UserRightCannotResolve',
-                    'InvalidArgument',
-                    $Name
-                )
-                $pscmdlet.ThrowTerminatingError($errorRecord)
-            }
+            $Script:userRightData.Values
         }
-    } else {
-        $Script:userRightData.Values
     }
 }

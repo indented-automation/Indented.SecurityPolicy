@@ -9,13 +9,13 @@
 @{
 
 # Script module or binary module file associated with this manifest.
-# RootModule = ''
+RootModule = 'Indented.SecurityPolicy.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.2.2'
+ModuleVersion = '1.3.0'
 
 # Supported PSEditions
-# CompatiblePSEditions = @()
+CompatiblePSEditions = @('Core', 'Desktop')
 
 # ID used to uniquely identify this module
 GUID = 'e1d90894-388a-42a1-aa09-b7bb0bbdfae0'
@@ -24,10 +24,10 @@ GUID = 'e1d90894-388a-42a1-aa09-b7bb0bbdfae0'
 Author = 'Chris Dent'
 
 # Company or vendor of this module
-CompanyName = 'Indented Automation'
+CompanyName = 'Chris Dent'
 
 # Copyright statement for this module
-Copyright = '2018 Indented Automation Plc'
+Copyright = '2018 Chris Dent'
 
 # Description of the functionality provided by this module
 Description = 'Security management functions and resources'

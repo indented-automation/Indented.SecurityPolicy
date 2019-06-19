@@ -1,6 +1,6 @@
 using namespace System.Management.Automation
 
-filter Resolve-SecurityOption {
+function Resolve-SecurityOption {
     <#
     .SYNOPSIS
         Resolves the name of a security option as shown in the local security policy editor.
@@ -33,30 +33,32 @@ filter Resolve-SecurityOption {
         [String]$Category
     )
 
-    if ($Name) {
-        if ($Script:securityOptionData.Contains($Name)) {
-            $Script:securityOptionData[$Name]
-        } elseif ($Script:securityOptionLookupHelper.Contains($Name)) {
-            $Script:securityOptionData[$Script:securityOptionLookupHelper[$Name]]
+    process {
+        if ($Name) {
+            if ($Script:securityOptionData.Contains($Name)) {
+                $Script:securityOptionData[$Name]
+            } elseif ($Script:securityOptionLookupHelper.Contains($Name)) {
+                $Script:securityOptionData[$Script:securityOptionLookupHelper[$Name]]
+            } else {
+                $isLikeDescription = $false
+                foreach ($value in $Script:securityOptionLookupHelper.Keys -like $Name) {
+                    $isLikeDescription = $true
+                    $Script:securityOptionData[$Script:securityOptionLookupHelper[$value]]
+                }
+                if (-not $isLikeDescription) {
+                    $errorRecord = [ErrorRecord]::new(
+                        [ArgumentException]::new('"{0}" does not resolve to a security option' -f $Name),
+                        'CannotResolveSecurityOption',
+                        'InvalidArgument',
+                        $Name
+                    )
+                    $pscmdlet.ThrowTerminatingError($errorRecord)
+                }
+            }
+        } elseif ($Category) {
+            $Script:securityOptionData.Values.Where{ $_.Category -like $Category }
         } else {
-            $isLikeDescription = $false
-            foreach ($value in $Script:securityOptionLookupHelper.Keys -like $Name) {
-                $isLikeDescription = $true
-                $Script:securityOptionData[$Script:securityOptionLookupHelper[$value]]
-            }
-            if (-not $isLikeDescription) {
-                $errorRecord = [ErrorRecord]::new(
-                    [ArgumentException]::new('"{0}" does not resolve to a security option' -f $Name),
-                    'CannotResolveSecurityOption',
-                    'InvalidArgument',
-                    $Name
-                )
-                $pscmdlet.ThrowTerminatingError($errorRecord)
-            }
+            $Script:securityOptionData.Values
         }
-    } elseif ($Category) {
-        $Script:securityOptionData.Values.Where{ $_.Category -like $Category }
-    } else {
-        $Script:securityOptionData.Values
     }
 }

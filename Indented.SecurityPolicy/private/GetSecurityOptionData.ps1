@@ -1,7 +1,17 @@
 using namespace System.Management.Automation
 
 function GetSecurityOptionData {
+    <#
+    .SYNOPSIS
+        Get option data for the named security option.
+    .DESCRIPTION
+        Get option data for the named security option.
+    #>
+
+    [CmdletBinding()]
     param (
+        # The name of the security option.
+        [Parameter(Mandatory)]
         [String]$Name
     )
 

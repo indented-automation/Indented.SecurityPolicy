@@ -1,6 +1,6 @@
 using namespace System.Management.Automation
 
-filter Uninstall-GroupManagedServiceAccount {
+function Uninstall-GroupManagedServiceAccount {
     <#
     .SYNOPSIS
         Uninstalls a Group Managed Service Account from the local machine.
@@ -15,19 +15,21 @@ filter Uninstall-GroupManagedServiceAccount {
         [String]$AccountName
     )
 
-    try {
-        if (Test-GroupManagedServiceAccount $AccountName) {
-            [Indented.SecurityPolicy.ServiceAccount]::RemoveServiceAccount($AccountName)
-        } else {
-            $errorRecord = [ErrorRecord]::new(
-                [ArgumentException]::new('The specified account, {0}, is not installed' -f $AccountName),
-                'GMSANotInstalled',
-                'InvalidArgument',
-                $AccountName
-            )
-            $pscmdlet.ThrowTerminatingError($errorRecord)
+    process {
+        try {
+            if (Test-GroupManagedServiceAccount $AccountName) {
+                [Indented.SecurityPolicy.ServiceAccount]::RemoveServiceAccount($AccountName)
+            } else {
+                $errorRecord = [ErrorRecord]::new(
+                    [ArgumentException]::new('The specified account, {0}, is not installed' -f $AccountName),
+                    'GMSANotInstalled',
+                    'InvalidArgument',
+                    $AccountName
+                )
+                $pscmdlet.ThrowTerminatingError($errorRecord)
+            }
+        } catch {
+            $pscmdlet.ThrowTerminatingError($_)
         }
-    } catch {
-        $pscmdlet.ThrowTerminatingError($_)
     }
 }

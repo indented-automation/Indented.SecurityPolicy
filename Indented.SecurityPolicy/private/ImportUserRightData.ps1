@@ -1,7 +1,22 @@
 using namespace Indented.SecurityPolicy
 
 function ImportUserRightData {
-    $localizedUserRights = Import-LocalizedData -FileName userRights
+    <#
+    .SYNOPSIS
+        Import and merge localized user rights data.
+    .DESCRIPTION
+        Import and merge localized user rights data.
+    #>
+
+    [CmdletBinding()]
+    param ( )
+
+    $params = @{
+        FileName        = 'userRights'
+        BindingVariable = 'localizedUserRights'
+        BaseDirectory   = $myinvocation.MyCommand.Module.ModuleBase
+    }
+    Import-LocalizedData @params
 
     $Script:userRightData = @{}
     $Script:userRightLookupHelper = @{}

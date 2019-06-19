@@ -1,6 +1,6 @@
 using namespace Indented.SecurityPolicy
 
-filter Install-GroupManagedServiceAccount {
+function Install-GroupManagedServiceAccount {
     <#
     .SYNOPSIS
         Adds a Group Managed Service Account to the local machine.
@@ -17,9 +17,11 @@ filter Install-GroupManagedServiceAccount {
         [String]$AccountName
     )
 
-    try {
-        [ServiceAccount]::AddServiceAccount($AccountName)
-    } catch {
-        $pscmdlet.ThrowTerminatingError($_)
+    process {
+        try {
+            [ServiceAccount]::AddServiceAccount($AccountName)
+        } catch {
+            $pscmdlet.ThrowTerminatingError($_)
+        }
     }
 }

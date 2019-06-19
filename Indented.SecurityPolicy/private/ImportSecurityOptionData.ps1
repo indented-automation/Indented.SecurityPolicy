@@ -1,5 +1,20 @@
 function ImportSecurityOptionData {
-    $localizedSecurityOptions = Import-LocalizedData -FileName securityOptions
+    <#
+    .SYNOPSIS
+        Import and merge localized security option data.
+    .DESCRIPTION
+        Import and merge localized security option data.
+    #>
+
+    [CmdletBinding()]
+    param ( )
+
+    $params = @{
+        FileName        = 'securityOptions'
+        BindingVariable = 'localizedSecurityOptions'
+        BaseDirectory   = $myinvocation.MyCommand.Module.ModuleBase
+    }
+    Import-LocalizedData @params
 
     $path = Join-Path $myinvocation.MyCommand.Module.ModuleBase 'data\securityOptions.psd1'
     $Script:securityOptionData = Import-PowerShellDataFile $path

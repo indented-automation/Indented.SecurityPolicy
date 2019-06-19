@@ -8,6 +8,10 @@ function OpenLsaPolicy {
         Open the LSA policy handle.
     #>
 
+    [CmdletBinding()]
+    [OutputType([Indented.SecurityPolicy.Lsa])]
+    param ( )
+
     try {
         return [Indented.SecurityPolicy.Lsa]::new()
     } catch {
