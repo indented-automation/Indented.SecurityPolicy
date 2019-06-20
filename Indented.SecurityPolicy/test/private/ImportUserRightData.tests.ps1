@@ -53,6 +53,33 @@ InModuleScope Indented.SecurityPolicy {
                 $Script:userRightLookupHelper.Contains($Description) | Should -Be $true
                 $Script:userRightLookupHelper[$Description] | Should -Be $Name
             }
+
+            It 'Handles <Culture> culture fallback' -TestCases @(
+                @{ Culture = 'en-US' }
+                @{ Culture = 'en-GB' }
+                @{ Culture = 'da-DK' }
+                @{ Culture = 'da' }
+                @{ Culture = 'sv-FI' }
+            ) {
+                param (
+                    $Culture
+                )
+
+                $currentCulture = $PSUICulture
+
+                & {
+                    [System.Threading.Thread]::CurrentThread.CurrentUICulture = $Culture
+
+                    ImportUserRightData
+
+                    $Description = 'Access Credential Manager as a trusted caller'
+                    $Name = 'SeTrustedCredManAccessPrivilege'
+
+                    $Script:userRightLookupHelper[$Description] | Should -Be $Name
+
+                    [System.Threading.Thread]::CurrentThread.CurrentUICulture = $currentCulture
+                }
+            }
         }
     }
 }

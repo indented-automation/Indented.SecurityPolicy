@@ -64,8 +64,35 @@ InModuleScope Indented.SecurityPolicy {
 
                 ImportSecurityOptionData
 
-                $Script:securityOptionLookupHelper.Contains($Description) | Should -Be $true
+                $Script:securityOptionLookupHelper.Contains($Description) | Should -BeTrue
                 $Script:securityOptionLookupHelper[$Description] | Should -Be $Name
+            }
+
+            It 'Handles <Culture> culture fallback' -TestCases @(
+                @{ Culture = 'en-US' }
+                @{ Culture = 'en-GB' }
+                @{ Culture = 'da-DK' }
+                @{ Culture = 'da' }
+                @{ Culture = 'sv-FI' }
+            ) {
+                param (
+                    $Culture
+                )
+
+                $currentCulture = $PSUICulture
+
+                & {
+                    [System.Threading.Thread]::CurrentThread.CurrentUICulture = $Culture
+
+                    ImportSecurityOptionData
+
+                    $Description = 'User Account Control: Run all administrators in Admin Approval Mode'
+                    $Name = 'EnableLUA'
+
+                    $Script:securityOptionLookupHelper[$Description] | Should -Be $Name
+
+                    [System.Threading.Thread]::CurrentThread.CurrentUICulture = $currentCulture
+                }
             }
         }
     }

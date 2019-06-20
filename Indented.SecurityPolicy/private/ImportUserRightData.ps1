@@ -11,12 +11,17 @@ function ImportUserRightData {
     [CmdletBinding()]
     param ( )
 
-    $params = @{
-        FileName        = 'userRights'
-        BindingVariable = 'localizedUserRights'
-        BaseDirectory   = $myinvocation.MyCommand.Module.ModuleBase
+    try {
+        $params = @{
+            FileName        = 'userRights'
+            BindingVariable = 'localizedUserRights'
+            BaseDirectory   = $myinvocation.MyCommand.Module.ModuleBase
+            ErrorAction     = 'Stop'
+        }
+        Import-LocalizedData @params
+    } catch {
+        Import-LocalizedData @params -UICulture en
     }
-    Import-LocalizedData @params
 
     $Script:userRightData = @{}
     $Script:userRightLookupHelper = @{}
