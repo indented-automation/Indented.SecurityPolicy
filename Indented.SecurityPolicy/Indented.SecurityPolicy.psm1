@@ -1,3 +1,5 @@
+# Note: This module is not functional without the compiled SecurityPolicy solution. This loader cannot be reliably used.
+
 $enumeration = @(
     'SecurityOptions\AllocateDASD'
     'SecurityOptions\AuditNTLMInDomain'

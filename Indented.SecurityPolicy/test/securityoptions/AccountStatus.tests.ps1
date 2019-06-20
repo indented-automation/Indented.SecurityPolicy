@@ -17,13 +17,13 @@ if (-not $UseExisting) {
 InModuleScope Indented.SecurityPolicy {
     Describe AccountStatus {
         BeforeAll {
-            Mock Get-LocalUser {
+            Mock GetIadsLocalUser {
                 [PSCustomObject]@{
                     Enabled = $true
                 }
             }
-            Mock Enable-LocalUser
-            Mock Disable-LocalUser
+            Mock EnableIadsLocalUser
+            Mock DisableIadsLocalUser
         }
 
         BeforeEach {
@@ -42,19 +42,19 @@ InModuleScope Indented.SecurityPolicy {
         }
 
         Context 'Set' {
-            It 'When the account should be enabled, calls Enable-LocalUser' {
+            It 'When the account should be enabled, calls EnableIadsLocalUser' {
                 $class.Set()
 
-                Assert-MockCalled Enable-LocalUser -Times 1 -Scope It
-                Assert-MockCalled Disable-LocalUser -Times 0 -Scope It
+                Assert-MockCalled EnableIadsLocalUser -Times 1 -Scope It
+                Assert-MockCalled DisableIadsLocalUser -Times 0 -Scope It
             }
 
-            It 'When the account should be disabled, calls Disable-LocalUser' {
+            It 'When the account should be disabled, calls DisableIadsLocalUser' {
                 $class.Value = 'Disabled'
                 $class.Set()
 
-                Assert-MockCalled Enable-LocalUser -Times 0 -Scope It
-                Assert-MockCalled Disable-LocalUser -Times 1 -Scope It
+                Assert-MockCalled EnableIadsLocalUser -Times 0 -Scope It
+                Assert-MockCalled DisableIadsLocalUser -Times 1 -Scope It
             }
         }
 
@@ -72,7 +72,7 @@ InModuleScope Indented.SecurityPolicy {
 
         Context 'Test, account is disabled' {
             BeforeAll {
-                Mock Get-LocalUser {
+                Mock GetIadsLocalUser {
                     [PSCustomObject]@{
                         Enabled = $false
                     }

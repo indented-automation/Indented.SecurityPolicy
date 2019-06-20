@@ -4,7 +4,7 @@ class AccountStatus : AccountBase {
     [Enabled]$Value
 
     [AccountStatus] Get() {
-        $localUser = Get-LocalUser -Sid $this.GetSid()
+        $localUser = GetIadsLocalUser -Sid $this.GetSid()
         $this.Value = [Enabled][Int]$localUser.Enabled
 
         return $this
@@ -12,14 +12,14 @@ class AccountStatus : AccountBase {
 
     [Void] Set() {
         if ([Boolean][Int]$this.Value) {
-            Enable-LocalUser -Sid $this.GetSid()
+            EnableIadsLocalUser -Sid $this.GetSid()
         } else {
-            Disable-LocalUser -Sid $this.GetSid()
+            DisableIadsLocalUser -Sid $this.GetSid()
         }
     }
 
     [Boolean] Test() {
-        $localUser = Get-LocalUser -Sid $this.GetSid()
+        $localUser = GetIadsLocalUser -Sid $this.GetSid()
 
         return $localUser.Enabled -eq ([Boolean][Int]$this.Value)
     }

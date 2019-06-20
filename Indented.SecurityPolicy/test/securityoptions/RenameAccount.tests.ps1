@@ -17,12 +17,12 @@ if (-not $UseExisting) {
 InModuleScope Indented.SecurityPolicy {
     Describe RenameAccount {
         BeforeAll {
-            Mock Get-LocalUser {
+            Mock GetIadsLocalUser {
                 [PSCustomObject]@{
                     Name = 'Guest'
                 }
             }
-            Mock Rename-LocalUser
+            Mock RenameIadsLocalUser
         }
 
         BeforeEach {
@@ -41,10 +41,10 @@ InModuleScope Indented.SecurityPolicy {
         }
 
         Context 'Set' {
-            It 'Calls Rename-LocalUser' {
+            It 'Calls RenameIadsLocalUser' {
                 $class.Set()
 
-                Assert-MockCalled Rename-LocalUser -Times 1 -Scope It
+                Assert-MockCalled RenameIadsLocalUser -Times 1 -Scope It
             }
         }
 
